@@ -1,0 +1,12 @@
+version: "3"
+services:
+  helpdesk:
+    image: node:alpine
+    container_name: helpdesk-web
+    restart: always
+    volumes:
+      - ./build:/app/build
+      - ./ecosystem.config.js:/app/ecosystem.config.js
+    ports:
+      - 9080:9080
+    command: sh -c "npm install -g npm@8.0.0 serve pm2 && cd /app && pm2-runtime start ecosystem.config.js --env production"

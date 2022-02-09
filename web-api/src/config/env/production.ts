@@ -7,7 +7,7 @@ export default {
   host: process.env.HOST,
   port: process.env.PORT,
   sesstionTime: oneDay * 1,
-  whitelist: [process.env.CLIENT_HOST as string],
+  whitelist: [process.env.CLIENT_HOST as string, "http://localhost:9080"],
   sesseionOptions: {
     name: "ekyc-sid",
     secret: "ekyc-secretkey",

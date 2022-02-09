@@ -1,0 +1,44 @@
+version: "3"
+
+services:
+  postgres:
+    container_name: helpdesk-postgres
+    image: postgres:12.3
+    ports:
+      - "5432:5432"
+    volumes: 
+      - "./postgres_data:/var/lib/postgresql/data"
+    environment:
+      POSTGRES_USER: sa
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: helpdesk
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: helpdesk-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_LISTEN_PORT: 4041
+    ports:
+      - "4041:4041"
+  helpdesk-be:
+    container_name: helpdesk-be
+    image: node:alpine
+    restart: always
+    depends_on:
+      - postgres
+    volumes:
+      - ./:/app
+    environment:
+      - NODE_ENV
+      - HOST
+      - PORT
+      - DB_USERNAME
+      - DB_PASSWORD
+      - DB_NAME
+      - DB_HOST
+      - DB_PORT
+      - CLIENT_HOST
+    ports:
+      - 9000:9000
+    command: sh -c "npm install -g npm@8.0.0 pm2 && cd /app && pm2-runtime start ecosystem.config.js --env production"
